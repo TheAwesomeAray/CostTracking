@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CostTracking", "CostTracking\CostTracking.csproj", "{A324E194-7598-415E-AD3B-59B66A42612F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CostTracking", "CostTracking\CostTracking.csproj", "{A324E194-7598-415E-AD3B-59B66A42612F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CostTracking.Domain", "CostTracking.Domain\CostTracking.Domain.csproj", "{E5150738-6673-4011-ADFC-0E8BB0A6F5AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CostTracking.Tests", "CostTracking.Tests\CostTracking.Tests.csproj", "{46C1E016-BDDD-4911-B942-8B69462765A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{A324E194-7598-415E-AD3B-59B66A42612F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A324E194-7598-415E-AD3B-59B66A42612F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A324E194-7598-415E-AD3B-59B66A42612F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5150738-6673-4011-ADFC-0E8BB0A6F5AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5150738-6673-4011-ADFC-0E8BB0A6F5AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5150738-6673-4011-ADFC-0E8BB0A6F5AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5150738-6673-4011-ADFC-0E8BB0A6F5AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46C1E016-BDDD-4911-B942-8B69462765A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46C1E016-BDDD-4911-B942-8B69462765A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46C1E016-BDDD-4911-B942-8B69462765A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46C1E016-BDDD-4911-B942-8B69462765A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
