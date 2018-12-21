@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using CostTracking.Domain;
+using Xunit;
 
 namespace CostTracking.Tests
 {
-    class ActualShould
+    public class ActualShould
     {
+
+       
     }
+
+    
 }

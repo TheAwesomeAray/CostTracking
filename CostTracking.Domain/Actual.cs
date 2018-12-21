@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CostTracking.Domain
+﻿namespace CostTracking.Domain
 {
     public class Actual
     {
