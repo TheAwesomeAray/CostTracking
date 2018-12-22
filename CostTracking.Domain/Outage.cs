@@ -12,5 +12,10 @@ namespace CostTracking.Domain
             OutageStartDate = outageStartDate;
             OutageEndDate = outageEndDate;
         }
+
+        public bool DuringOutage(DateTime date)
+        {
+            return date > OutageStartDate && date < OutageEndDate;
+        }
     }
 }
