@@ -1,53 +1,31 @@
 ﻿using CostTracking.Domain.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CostTracking.Domain
 {
-    public class Schedule
+    public class HoursSchedule
     {
-        private int WeekDayHours { get; set; }
-        private int WeekEndHours { get; set; }
-        private int PrePostOutageHours { get; set; }
-        private DayOfWeek WorkWeekStart { get; set; }
+        public decimal WeekDayHours { get; private set; }
+        public decimal WeekEndHours { get; private set; }
+        public decimal PrePostOutageHours { get; private set; }
+        public DayOfWeek WorkWeekStart { get; private set; }
+        public int OvertimeStartPoint { get; private set; }
 
-        public Schedule(int weekdayHours, int weekendHours, int prePostOutageHours, DayOfWeek workWeekStart)
+        public HoursSchedule(int weekdayHours, int weekendHours, int prePostOutageHours, DayOfWeek workWeekStart, int overtimeStartPoint)
         {
             WeekDayHours = weekdayHours;
             WeekEndHours = weekendHours;
-            PrePostOutageHours = PrePostOutageHours;
+            PrePostOutageHours = prePostOutageHours;
             WorkWeekStart = workWeekStart;
+            OvertimeStartPoint = overtimeStartPoint;
         }
 
-        public Dictionary<DateTime, decimal> GetEquivalentHeadCount(List<TimeEntry> timeEntries, Outage outage)
+        public decimal GetScheduleForDate(Outage outage, DateTime dateTime)
         {
-            var dayGroups = timeEntries.GroupBy(t => t.DateWorked.Day);
-            var equivalentHeadCounts = new Dictionary<DateTime, decimal>();
+            if (!outage.DuringOutage(dateTime)) return PrePostOutageHours;
+            else if (DateService.IsWeekDay(dateTime)) return WeekDayHours;
 
-            foreach (var group in dayGroups)
-            {
-                decimal totalHoursWorkedForDay = group.Sum(x => x.HoursWorked);
-                DateTime dateWorked = group.First().DateWorked;
-                decimal equivalentHeadCount = totalHoursWorkedForDay / GetScheduledHoursForDay(dateWorked, outage);
-                equivalentHeadCounts.Add(dateWorked, equivalentHeadCount);
-            }
-
-            return equivalentHeadCounts;
-        }
-
-        private int GetScheduledHoursForDay(DateTime date, Outage outage)
-        {
-            if (!outage.DuringOutage(date))
-            {
-                return PrePostOutageHours;
-            }
-            else if (DateService.IsWeekDay(date))
-            {
-                return WeekDayHours;
-            }
-
-            return WeekDayHours;
+            return WeekEndHours;
         }
     }
 }
