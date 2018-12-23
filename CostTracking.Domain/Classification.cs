@@ -1,4 +1,6 @@
-﻿namespace CostTracking.Domain
+﻿using System;
+
+namespace CostTracking.Domain
 {
     public class Classification
     {
@@ -12,5 +14,7 @@
             StraightTimeRate = straightTimeRate;
             OvertimeRate = overtimeRate;
         }
+
+        
     }
 }

@@ -21,7 +21,7 @@ namespace CostTracking.Domain.Services
             {
                 foreach (var entry in schedule.HeadCountEntries.OrderBy(x => x.Date))
                 {
-                    dailyLaborCosts.Add(entry.Date, GetLaborCost(entry.HeadCount, schedule.Classification.StraightTimeRate, hoursSchedule.PrePostOutageHours));
+                    dailyLaborCosts.Add(entry.Date, GetLaborCost(entry.HeadCount, schedule.Classification.StraightTimeRate, hoursSchedule.GetScheduleForDate(outage, entry.Date)));
                 }
             }
 
@@ -37,5 +37,6 @@ namespace CostTracking.Domain.Services
         {
             return entry.Date.DayOfWeek == hoursSchedule.WorkWeekStart;
         }
+        
     }
 }
