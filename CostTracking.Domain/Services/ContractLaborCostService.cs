@@ -6,7 +6,14 @@ namespace CostTracking.Domain.Services
 {
     public class ContractLaborCostService
     {
-        public Dictionary<DateTime, decimal> GetProjectedCostsForDateRange(Outage outage, HoursSchedule hoursSchedule, List<HeadCountSchedule> headCountSchedules)
+        private Outage outage;
+
+        public ContractLaborCostService(Outage outage)
+        {
+            this.outage = outage;
+        }
+
+        public Dictionary<DateTime, decimal> GetProjectedCostsForDateRange(HoursSchedule hoursSchedule, List<HeadCountSchedule> headCountSchedules)
         {
             var dailyLaborCosts = new Dictionary<DateTime, decimal>();
 
