@@ -16,12 +16,20 @@ namespace CostTracking.Domain.Services
         public Dictionary<DateTime, decimal> GetProjectedCostsForDateRange(HoursSchedule hoursSchedule, List<HeadCountSchedule> headCountSchedules)
         {
             var dailyLaborCosts = new Dictionary<DateTime, decimal>();
+            decimal hoursWorked = 0;
 
             foreach (var schedule in headCountSchedules)
             {
                 foreach (var entry in schedule.HeadCountEntries.OrderBy(x => x.Date))
                 {
-                    dailyLaborCosts.Add(entry.Date, GetLaborCost(entry.HeadCount, schedule.Classification.StraightTimeRate, hoursSchedule.GetScheduleForDate(outage, entry.Date)));
+                    if (IsNewWorkWeek(entry, hoursSchedule))
+                    {
+                        hoursWorked = 0;
+                    }
+
+                    var scheduledHours = hoursSchedule.GetScheduledHoursForDate(outage, entry.Date);
+                    dailyLaborCosts.Add(entry.Date, GetLaborCost(entry.HeadCount, schedule.Classification.GetRate(hoursWorked, hoursSchedule), scheduledHours));
+                    hoursWorked += scheduledHours;
                 }
             }
 

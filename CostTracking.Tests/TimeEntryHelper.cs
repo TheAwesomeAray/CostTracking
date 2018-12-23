@@ -36,7 +36,7 @@ namespace CostTracking.Tests
 
             for (int i = 0; i < desiredHeadCount; i++)
             {
-                timeEntriesForDay.Add(new TimeEntry(date, schedule.GetScheduleForDate(outage, date), classification));
+                timeEntriesForDay.Add(new TimeEntry(date, schedule.GetScheduledHoursForDate(outage, date), classification));
             }
 
             return timeEntriesForDay;

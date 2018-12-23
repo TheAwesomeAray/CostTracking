@@ -20,7 +20,7 @@ namespace CostTracking.Tests
         }
 
         [Fact]
-        public void Generate_correct_cost_for_straight_time_work_day_pre_or_post_outage()
+        public void Generate_correct_cost_for_straight_time_pre_or_post_outage()
         {
             var dateTimeForCost = DateTime.Parse("1/15/2018");
             var headCountEntries = new List<HeadCountEntry>() { new HeadCountEntry(10, dateTimeForCost) };
@@ -33,7 +33,7 @@ namespace CostTracking.Tests
         }
 
         [Fact]
-        public void Generate_correct_cost_for_straight_time_work_day_during_outage_weekday()
+        public void Generate_correct_cost_for_straight_time_during_outage_weekday()
         {
             var dateTimeForCost = DateTime.Parse("2/15/2018");
             var headCountEntries = new List<HeadCountEntry>() { new HeadCountEntry(10, dateTimeForCost) };
@@ -43,6 +43,27 @@ namespace CostTracking.Tests
             var result = contractLaborCostService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
 
             Assert.Equal(3600, result[dateTimeForCost]);
+        }
+
+        [Fact]
+        public void Generate_correct_cost_for_overtime_during_outage_weekday()
+        {
+            var dateTimeForCost = DateTime.Parse("2/11/2018");
+            var dateTimeForOvertime = dateTimeForCost.AddDays(5);
+            var headCountEntries = new List<HeadCountEntry>() {
+                new HeadCountEntry(10, dateTimeForCost),
+                new HeadCountEntry(10, dateTimeForCost.AddDays(1)),
+                new HeadCountEntry(10, dateTimeForCost.AddDays(2)),
+                new HeadCountEntry(10, dateTimeForCost.AddDays(3)),
+                new HeadCountEntry(10, dateTimeForCost.AddDays(4)),
+                new HeadCountEntry(10, dateTimeForOvertime),
+            };
+            var headCountSchedules = new List<HeadCountSchedule>() { new HeadCountSchedule(headCountEntries, classification) };
+
+            var contractLaborCostService = new ContractLaborCostService(outage);
+            var result = contractLaborCostService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
+
+            Assert.Equal(4800, result[dateTimeForOvertime]);
         }
     }
 }

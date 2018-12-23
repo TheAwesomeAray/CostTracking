@@ -15,6 +15,12 @@ namespace CostTracking.Domain
             OvertimeRate = overtimeRate;
         }
 
-        
+        internal decimal GetRate(decimal hoursWorked, HoursSchedule hoursSchedule)
+        {
+            if (hoursWorked < hoursSchedule.OvertimeStartPoint)
+                return StraightTimeRate;
+
+            return OvertimeRate;
+        }
     }
 }

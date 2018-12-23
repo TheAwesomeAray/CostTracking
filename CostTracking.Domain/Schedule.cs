@@ -20,7 +20,7 @@ namespace CostTracking.Domain
             OvertimeStartPoint = overtimeStartPoint;
         }
 
-        public decimal GetScheduleForDate(Outage outage, DateTime dateTime)
+        public decimal GetScheduledHoursForDate(Outage outage, DateTime dateTime)
         {
             if (!outage.DuringOutage(dateTime)) return PrePostOutageHours;
             else if (DateService.IsWeekDay(dateTime)) return WeekDayHours;

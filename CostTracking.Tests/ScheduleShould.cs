@@ -42,9 +42,9 @@ namespace CostTracking.Tests
             var schedule = new HoursSchedule(outageWeekdaySchedule, outageWeekendSchedule, prePostOutageSchedule, DayOfWeek.Saturday, 40);
             var outage = new Outage(DateTime.Parse("1/1/2018"), DateTime.Parse("1/30/2018"));
 
-            Assert.Equal(outageWeekdaySchedule, schedule.GetScheduleForDate(outage, weekDayDate));
-            Assert.Equal(outageWeekendSchedule, schedule.GetScheduleForDate(outage, weekEndDate));
-            Assert.Equal(prePostOutageSchedule, schedule.GetScheduleForDate(outage, postOutageDate));
+            Assert.Equal(outageWeekdaySchedule, schedule.GetScheduledHoursForDate(outage, weekDayDate));
+            Assert.Equal(outageWeekendSchedule, schedule.GetScheduledHoursForDate(outage, weekEndDate));
+            Assert.Equal(prePostOutageSchedule, schedule.GetScheduledHoursForDate(outage, postOutageDate));
         }
     }
 }
