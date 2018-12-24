@@ -15,12 +15,30 @@ namespace CostTracking.Domain
             OvertimeRate = overtimeRate;
         }
 
-        internal decimal GetRate(decimal hoursWorked, HoursSchedule hoursSchedule)
+        internal decimal GetRate(decimal hoursWorked, HoursSchedule hoursSchedule, decimal scheduledHours)
         {
-            if (hoursWorked < hoursSchedule.OvertimeStartPoint)
+            if (NoOvertimeHours(hoursWorked, scheduledHours, hoursSchedule.OvertimeStartPoint))
                 return StraightTimeRate;
+            else if (AllOvertimeHours(hoursWorked, scheduledHours, hoursSchedule.OvertimeStartPoint))
+                return OvertimeRate;
 
-            return OvertimeRate;
+            return CalculateSplitRate(hoursWorked, hoursSchedule.OvertimeStartPoint, scheduledHours);
+        }
+
+        private bool AllOvertimeHours(decimal hoursWorked, decimal scheduledHours, int overtimeStartPoint)
+        {
+            return overtimeStartPoint < hoursWorked;
+        }
+
+        private bool NoOvertimeHours(decimal hoursWorked, decimal scheduledHours, int overtimeStartPoint)
+        {
+            return overtimeStartPoint > (hoursWorked + scheduledHours);
+        }
+
+        private decimal CalculateSplitRate(decimal hoursWorked, int overtimeStartPoint, decimal scheduledHours)
+        {
+            var straightTimePercentage = (overtimeStartPoint - hoursWorked) / scheduledHours;
+            return straightTimePercentage * StraightTimeRate + (1 - straightTimePercentage) * OvertimeRate;
         }
     }
 }

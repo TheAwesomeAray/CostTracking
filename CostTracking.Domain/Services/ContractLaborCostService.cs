@@ -23,12 +23,10 @@ namespace CostTracking.Domain.Services
                 foreach (var entry in schedule.HeadCountEntries.OrderBy(x => x.Date))
                 {
                     if (IsNewWorkWeek(entry, hoursSchedule))
-                    {
                         hoursWorked = 0;
-                    }
 
                     var scheduledHours = hoursSchedule.GetScheduledHoursForDate(outage, entry.Date);
-                    dailyLaborCosts.Add(entry.Date, GetLaborCost(entry.HeadCount, schedule.Classification.GetRate(hoursWorked, hoursSchedule), scheduledHours));
+                    dailyLaborCosts.Add(entry.Date, GetLaborCost(entry.HeadCount, schedule.Classification.GetRate(hoursWorked, hoursSchedule, scheduledHours), scheduledHours));
                     hoursWorked += scheduledHours;
                 }
             }
