@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CostTracking.Domain.Services
+namespace CostTracking.Domain.ContractLabor.Services
 {
     public class ContractLaborCostService
     {
@@ -22,11 +22,11 @@ namespace CostTracking.Domain.Services
             {
                 foreach (var entry in schedule.HeadCountEntries.OrderBy(x => x.Date))
                 {
-                    if (IsNewWorkWeek(entry, hoursSchedule))
+                    if (hoursSchedule.IsNewWorkWeek(entry))
                         hoursWorked = 0;
 
                     var scheduledHours = hoursSchedule.GetScheduledHoursForDate(outage, entry.Date);
-                    dailyLaborCosts.Add(entry.Date, GetLaborCost(entry.HeadCount, schedule.Classification.GetRate(hoursWorked, hoursSchedule, scheduledHours), scheduledHours));
+                    dailyLaborCosts.Add(entry.Date, GetLaborCost(entry.HeadCount, schedule.Classification.GetRate(hoursWorked, scheduledHours), scheduledHours));
                     hoursWorked += scheduledHours;
                 }
             }
@@ -38,11 +38,5 @@ namespace CostTracking.Domain.Services
         {
             return headCount * hours * rate;
         }
-
-        private bool IsNewWorkWeek(HeadCountEntry entry, HoursSchedule hoursSchedule)
-        {
-            return entry.Date.DayOfWeek == hoursSchedule.WorkWeekStart;
-        }
-        
     }
 }

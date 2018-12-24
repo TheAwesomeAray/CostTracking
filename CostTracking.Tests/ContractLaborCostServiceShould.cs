@@ -1,5 +1,6 @@
 ﻿using CostTracking.Domain;
-using CostTracking.Domain.Services;
+using CostTracking.Domain.ContractLabor;
+using CostTracking.Domain.ContractLabor.Services;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -9,14 +10,14 @@ namespace CostTracking.Tests
     public class ContractLaborCostServiceShould
     {
         private Outage outage;
-        private Classification classification;
+        private VendorClassification classification;
         private HoursSchedule hoursSchedule;
 
         public ContractLaborCostServiceShould()
         {
             outage = new Outage(DateTime.Parse("2/1/2018"), DateTime.Parse("2/28/2018"));
-            classification = new Classification("Boilermaker", 45, 60);
-            hoursSchedule = new HoursSchedule(8, 12, 10, DayOfWeek.Sunday, 40);
+            classification = Helper.GetClassification("Boilermaker", 45, 60);
+            hoursSchedule = Helper.GetHoursSchedule(8, 12, 10);
         }
 
         [Fact]

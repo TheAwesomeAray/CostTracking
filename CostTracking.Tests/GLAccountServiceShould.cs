@@ -13,7 +13,6 @@ namespace CostTracking.Tests
             GLAccountService.PopulateGLAccountFields(projection);
 
             Assert.True(projection.CostClassification == CostClassification.Outage);
-
         }
     }
 }

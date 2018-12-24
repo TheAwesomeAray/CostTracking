@@ -1,28 +1,28 @@
-﻿using System;
-
-namespace CostTracking.Domain
+﻿namespace CostTracking.Domain.ContractLabor
 {
-    public class Classification
+    public class VendorClassification
     {
+        public int Id { get; set; }
         public string Name { get; private set; }
         public decimal StraightTimeRate { get; private set; }
         public decimal OvertimeRate { get; private set; }
+        private VendorProfile VendorProfile { get; set; }
 
-        public Classification(string name, decimal straightTimeRate, decimal overtimeRate)
+        public VendorClassification(string name, decimal straightTimeRate, decimal overtimeRate, int companyProfileId)
         {
             Name = name;
             StraightTimeRate = straightTimeRate;
             OvertimeRate = overtimeRate;
         }
 
-        internal decimal GetRate(decimal hoursWorked, HoursSchedule hoursSchedule, decimal scheduledHours)
+        internal decimal GetRate(decimal hoursWorked, decimal scheduledHours)
         {
-            if (NoOvertimeHours(hoursWorked, scheduledHours, hoursSchedule.OvertimeStartPoint))
+            if (NoOvertimeHours(hoursWorked, scheduledHours, VendorProfile.OvertimeStartPoint))
                 return StraightTimeRate;
-            else if (AllOvertimeHours(hoursWorked, scheduledHours, hoursSchedule.OvertimeStartPoint))
+            else if (AllOvertimeHours(hoursWorked, scheduledHours, VendorProfile.OvertimeStartPoint))
                 return OvertimeRate;
 
-            return CalculateSplitRate(hoursWorked, hoursSchedule.OvertimeStartPoint, scheduledHours);
+            return CalculateSplitRate(hoursWorked, VendorProfile.OvertimeStartPoint, scheduledHours);
         }
 
         private bool AllOvertimeHours(decimal hoursWorked, decimal scheduledHours, int overtimeStartPoint)

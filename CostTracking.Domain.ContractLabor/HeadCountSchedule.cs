@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace CostTracking.Domain
+namespace CostTracking.Domain.ContractLabor
 {
     public class HeadCountSchedule
     {
-        public Classification Classification { get; private set; }
+        public VendorClassification Classification { get; private set; }
         public IEnumerable<HeadCountEntry> HeadCountEntries { get; set; }
 
-        public HeadCountSchedule(ICollection<HeadCountEntry> headCountEntries, Classification classification)
+        public HeadCountSchedule(ICollection<HeadCountEntry> headCountEntries, VendorClassification classification)
         {
             HeadCountEntries = headCountEntries;
             Classification = classification;

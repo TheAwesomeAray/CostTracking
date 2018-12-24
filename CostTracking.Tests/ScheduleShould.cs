@@ -1,5 +1,6 @@
 ﻿using CostTracking.Domain;
-using CostTracking.Domain.Services;
+using CostTracking.Domain.ContractLabor;
+using CostTracking.Domain.ContractLabor.Services;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -20,12 +21,12 @@ namespace CostTracking.Tests
                weekDayDate
             };
             int desiredHeadCount = 11;
-            var schedule = new HoursSchedule(8, 12, 10, DayOfWeek.Saturday, 40);
+            var hoursSchedule = Helper.GetHoursSchedule(8, 12, 10);
             var outage = new Outage(DateTime.Parse("1/1/2018"), DateTime.Parse("1/30/2018"));
-            var headCountService = new HeadCountService(schedule);
-            var timeEntries = TimeEntryHelper.GetTimeEntriesForDateRange(schedule, desiredHeadCount, daysWorked, outage, TimeEntryHelper.GetDefaultClassification());
+            var headCountService = new HeadCountService(hoursSchedule);
+            var timeEntries = Helper.GetTimeEntriesForDateRange(hoursSchedule, desiredHeadCount, daysWorked, outage, Helper.GetClassification("Boilermaker", 45, 60));
 
-            var equivalentHeadCounts = headCountService.GetEquivalentHeadCount(timeEntries, outage);
+            var equivalentHeadCounts = headCountService.GetEquivalentHeadCount(timeEntries, outage, hoursSchedule);
 
             Assert.Equal(desiredHeadCount, equivalentHeadCounts[weekDayDate]);
         }
@@ -39,7 +40,7 @@ namespace CostTracking.Tests
             int outageWeekdaySchedule = 8;
             int outageWeekendSchedule = 12;
             int prePostOutageSchedule = 10;
-            var schedule = new HoursSchedule(outageWeekdaySchedule, outageWeekendSchedule, prePostOutageSchedule, DayOfWeek.Saturday, 40);
+            var schedule = Helper.GetHoursSchedule(outageWeekdaySchedule, outageWeekendSchedule, prePostOutageSchedule);
             var outage = new Outage(DateTime.Parse("1/1/2018"), DateTime.Parse("1/30/2018"));
 
             Assert.Equal(outageWeekdaySchedule, schedule.GetScheduledHoursForDate(outage, weekDayDate));

@@ -39,3 +39,7 @@
 /CostTracking/obj/Release/netcoreapp2.0
 /.vs/CostTracking/v15
 /.vs
+/CostTracking.Domain.ContractLabor/obj
+/CostTracking.Domain.ContractLabor/bin/Debug/netcoreapp2.1
+/CostTracking.Tests/bin/Debug/netcoreapp2.1
+/CostTracking.Domain/bin/Debug/netcoreapp2.1

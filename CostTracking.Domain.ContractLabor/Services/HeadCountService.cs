@@ -1,8 +1,9 @@
-﻿using System;
+﻿using CostTracking.Domain.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CostTracking.Domain.Services
+namespace CostTracking.Domain.ContractLabor.Services
 {
     public class HeadCountService
     {
@@ -13,7 +14,7 @@ namespace CostTracking.Domain.Services
             this.schedule = schedule;
         }
 
-        public Dictionary<DateTime, decimal> GetEquivalentHeadCount(List<TimeEntry> timeEntries, Outage outage)
+        public Dictionary<DateTime, decimal> GetEquivalentHeadCount(List<TimeEntry> timeEntries, Outage outage, HoursSchedule hoursSchedule)
         {
             var dayGroups = timeEntries.GroupBy(t => t.DateWorked.Day);
             var equivalentHeadCounts = new Dictionary<DateTime, decimal>();
@@ -22,25 +23,11 @@ namespace CostTracking.Domain.Services
             {
                 decimal totalHoursWorkedForDay = group.Sum(x => x.HoursWorked);
                 DateTime dateWorked = group.First().DateWorked;
-                decimal equivalentHeadCount = totalHoursWorkedForDay / GetScheduledHoursForDay(dateWorked, outage);
+                decimal equivalentHeadCount = totalHoursWorkedForDay / hoursSchedule.GetScheduledHoursForDate(outage, dateWorked);
                 equivalentHeadCounts.Add(dateWorked, equivalentHeadCount);
             }
 
             return equivalentHeadCounts;
-        }
-
-        private decimal GetScheduledHoursForDay(DateTime date, Outage outage)
-        {
-            if (!outage.DuringOutage(date))
-            {
-                return schedule.PrePostOutageHours;
-            }
-            else if (DateService.IsWeekDay(date))
-            {
-                return schedule.WeekDayHours;
-            }
-
-            return schedule.WeekDayHours;
         }
     }
 }
