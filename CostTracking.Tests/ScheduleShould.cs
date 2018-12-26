@@ -1,5 +1,4 @@
 ﻿using CostTracking.Domain;
-using CostTracking.Domain.ContractLabor;
 using CostTracking.Domain.ContractLabor.Services;
 using System;
 using System.Collections.Generic;
@@ -24,7 +23,7 @@ namespace CostTracking.Tests
             var hoursSchedule = Helper.GetHoursSchedule(8, 12, 10);
             var outage = new Outage(DateTime.Parse("1/1/2018"), DateTime.Parse("1/30/2018"));
             var headCountService = new HeadCountService(hoursSchedule);
-            var timeEntries = Helper.GetTimeEntriesForDateRange(hoursSchedule, desiredHeadCount, daysWorked, outage, Helper.GetClassification("Boilermaker", 45, 60));
+            var timeEntries = Helper.GetTimeEntriesForDateRange(hoursSchedule, desiredHeadCount, daysWorked, outage, Helper.GetVendorClassification("Boilermaker", 45, 60));
 
             var equivalentHeadCounts = headCountService.GetEquivalentHeadCount(timeEntries, outage, hoursSchedule);
 

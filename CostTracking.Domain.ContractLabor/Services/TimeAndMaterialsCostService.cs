@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace CostTracking.Domain.ContractLabor.Services
 {
-    public class ContractLaborCostService
+    public class TimeAndMaterialsService
     {
         private Outage outage;
 
-        public ContractLaborCostService(Outage outage)
+        public TimeAndMaterialsService(Outage outage)
         {
             this.outage = outage;
         }

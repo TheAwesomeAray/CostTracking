@@ -1,5 +1,4 @@
 using CostTracking.Domain;
-using System;
 using System.Linq;
 using Xunit;
 

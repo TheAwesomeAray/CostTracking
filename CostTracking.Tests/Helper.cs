@@ -44,9 +44,14 @@ namespace CostTracking.Tests
             return timeEntriesForDay;
         }
 
-        public static VendorClassification GetClassification(string name, decimal straightTimeRate, decimal overtimerate)
+        public static VendorClassification GetVendorClassification(string name, decimal straightTimeRate, decimal overtimerate)
         {
             return ApplyVendorProfileToPrivateField(new VendorClassification(name, straightTimeRate, overtimerate, 1)) as VendorClassification;
+        }
+
+        public static CompanyClassification GetCompanyClassification(string name, decimal straightTimeRate, bool exempt)
+        {
+            return ApplyVendorProfileToPrivateField(new CompanyClassification(name, straightTimeRate, 1, exempt)) as CompanyClassification;
         }
 
         public static HoursSchedule GetHoursSchedule(int weekDayHours, int weekEndHours, int prePostOutageHours)
@@ -57,8 +62,15 @@ namespace CostTracking.Tests
         public static object ApplyVendorProfileToPrivateField(object hasVendorProfile)
         {
             var type = hasVendorProfile.GetType();
-            var fields = type.GetProperties().ToList();
+            
             var prop = type.GetProperty("VendorProfile", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            if (prop == null)
+            {
+                type = type.BaseType;
+                prop = type.GetProperty("VendorProfile", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            }
+
             prop.SetValue(hasVendorProfile, new VendorProfile(DayOfWeek.Sunday, 40));
             return hasVendorProfile;
         }
