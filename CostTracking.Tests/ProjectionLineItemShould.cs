@@ -6,7 +6,7 @@ namespace CostTracking.Tests
     public class ProjectionLineItemShould
     {
         [Fact]
-        public void Set_amount()
+        public void SetAmount()
         {
             decimal amount = 500;
             var projection = new ProjectionLineItem(300);
@@ -16,7 +16,7 @@ namespace CostTracking.Tests
         }
 
         [Fact]
-        public void Allow_overriding_of_projection_amount()
+        public void AllowOverridingOfProjectionAmount()
         {
             decimal amount = 500;
             var projection = new ProjectionLineItem(300);
@@ -26,7 +26,7 @@ namespace CostTracking.Tests
         }
 
         [Fact]
-        public void Not_override_original_projection()
+        public void NotOverrideOriginalProjection()
         {
             decimal originalAmount = 500;
             var projection = new ProjectionLineItem(originalAmount);

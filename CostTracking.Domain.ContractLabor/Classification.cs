@@ -5,36 +5,36 @@
         public int VendorProfileId { get; private set; }
         protected virtual decimal StraightTimeRate { get; set; }
         protected virtual decimal OvertimeRate { get; set; }
-        private VendorProfile VendorProfile { get; set; }
+        protected VendorProfile VendorProfile { get; set; }
 
         public Classification(int vendorProfileId)
         {
             VendorProfileId = vendorProfileId;
         }
 
-        public virtual decimal GetRate(decimal hoursWorked, decimal scheduledHours)
+        public virtual decimal GetRate(WorkWeekToDate workWeek)
         {
-            if (NoOvertimeHours(hoursWorked, scheduledHours, VendorProfile.OvertimeStartPoint))
+            if (NoOvertimeHours(workWeek, VendorProfile.OvertimeStartPoint))
                 return StraightTimeRate;
-            else if (AllOvertimeHours(hoursWorked, scheduledHours, VendorProfile.OvertimeStartPoint))
+            else if (AllOvertimeHours(workWeek, VendorProfile.OvertimeStartPoint))
                 return OvertimeRate;
 
-            return CalculateSplitRate(hoursWorked, VendorProfile.OvertimeStartPoint, scheduledHours);
+            return CalculateSplitRate(workWeek, VendorProfile.OvertimeStartPoint);
         }
 
-        protected bool AllOvertimeHours(decimal hoursWorked, decimal scheduledHours, int overtimeStartPoint)
+        protected bool AllOvertimeHours(WorkWeekToDate workWeek, int overtimeStartPoint)
         {
-            return overtimeStartPoint < hoursWorked;
+            return overtimeStartPoint < workWeek.HoursWorkedWeekToDate;
         }
 
-        protected bool NoOvertimeHours(decimal hoursWorked, decimal scheduledHours, int overtimeStartPoint)
+        protected bool NoOvertimeHours(WorkWeekToDate workWeek, int overtimeStartPoint)
         {
-            return overtimeStartPoint > (hoursWorked + scheduledHours);
+            return overtimeStartPoint > (workWeek.HoursWorkedWeekToDate + workWeek.ScheduledHoursForDate);
         }
 
-        protected decimal CalculateSplitRate(decimal hoursWorked, int overtimeStartPoint, decimal scheduledHours)
+        protected decimal CalculateSplitRate(WorkWeekToDate workWeek, int overtimeStartPoint)
         {
-            var straightTimePercentage = (overtimeStartPoint - hoursWorked) / scheduledHours;
+            var straightTimePercentage = (overtimeStartPoint - workWeek.HoursWorkedWeekToDate) / workWeek.ScheduledHoursForDate;
             return straightTimePercentage * StraightTimeRate + (1 - straightTimePercentage) * OvertimeRate;
         }
     }

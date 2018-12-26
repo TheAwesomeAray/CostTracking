@@ -13,12 +13,12 @@
             StraightTimeRate = straightTimeRate;
         }
 
-        public override decimal GetRate(decimal hoursWorked, decimal scheduledHours)
+        public override decimal GetRate(WorkWeekToDate workWeekToDate)
         {
             if (Exempt)
                 return StraightTimeRate;
 
-            return base.GetRate(hoursWorked, scheduledHours);
+            return base.GetRate(workWeekToDate);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace CostTracking.Tests
     public class DateServiceShould
     {
         [Fact]
-        public void Correctly_identify_weekdays()
+        public void IdentifyWeekdays()
         {
             var dateTime = DateTime.Now;
             while (dateTime.DayOfWeek != DayOfWeek.Monday) dateTime = dateTime.AddDays(1);
@@ -20,7 +20,7 @@ namespace CostTracking.Tests
         }
 
         [Fact]
-        public void Correctly_identify_weekends()
+        public void IdentifyWeekends()
         {
             var dateTime = DateTime.Now;
             while (dateTime.DayOfWeek != DayOfWeek.Saturday) dateTime = dateTime.AddDays(1);

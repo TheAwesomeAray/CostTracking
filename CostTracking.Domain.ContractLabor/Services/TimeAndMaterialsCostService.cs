@@ -16,18 +16,22 @@ namespace CostTracking.Domain.ContractLabor.Services
         public Dictionary<DateTime, decimal> GetProjectedCostsForDateRange(HoursSchedule hoursSchedule, List<HeadCountSchedule> headCountSchedules)
         {
             var dailyLaborCosts = new Dictionary<DateTime, decimal>();
-            decimal hoursWorked = 0;
+            var workWeek = new WorkWeekToDate();
 
             foreach (var schedule in headCountSchedules)
             {
                 foreach (var entry in schedule.HeadCountEntries.OrderBy(x => x.Date))
                 {
-                    if (hoursSchedule.IsNewWorkWeek(entry))
-                        hoursWorked = 0;
+                    workWeek.Date = entry.Date;
 
-                    var scheduledHours = hoursSchedule.GetScheduledHoursForDate(outage, entry.Date);
-                    dailyLaborCosts.Add(entry.Date, GetLaborCost(entry.HeadCount, schedule.Classification.GetRate(hoursWorked, scheduledHours), scheduledHours));
-                    hoursWorked += scheduledHours;
+                    if (hoursSchedule.IsNewWorkWeek(entry))
+                        workWeek.HoursWorkedWeekToDate = 0;
+
+                    workWeek.ScheduledHoursForDate = hoursSchedule.GetScheduledHoursForDate(outage, entry.Date);
+                    var rate = schedule.Classification.GetRate(workWeek);
+                    dailyLaborCosts.Add(entry.Date, GetLaborCost(entry.HeadCount, rate, workWeek.ScheduledHoursForDate));
+
+                    workWeek.HoursWorkedWeekToDate += workWeek.ScheduledHoursForDate;
                 }
             }
 

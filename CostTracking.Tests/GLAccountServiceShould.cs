@@ -6,7 +6,7 @@ namespace CostTracking.Tests
     public class GLAccountServiceShould
     {
         [Fact]
-        public void Correctly_assign_cost_category()
+        public void CorrectlyAssignCostCategory()
         {
             var projection = new Projection("000000-000000-000000-OUT");
 

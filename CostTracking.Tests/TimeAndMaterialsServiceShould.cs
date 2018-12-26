@@ -10,102 +10,105 @@ namespace CostTracking.Tests
     public class TimeAndMaterialsServiceShould
     {
         private Outage outage;
-        private VendorClassification classification;
+        private VendorClassification vendorClassification;
         private HoursSchedule hoursSchedule;
 
         public TimeAndMaterialsServiceShould()
         {
             outage = new Outage(DateTime.Parse("2/1/2018"), DateTime.Parse("2/28/2018"));
-            classification = Helper.GetVendorClassification("Boilermaker", 45, 60);
+            vendorClassification = Helper.GetVendorClassification("Boilermaker", 45, 60);
             hoursSchedule = Helper.GetHoursSchedule(8, 12, 10);
         }
 
         [Fact]
-        public void Generate_correct_cost_for_straight_time_pre_or_post_outage()
+        public void GenerateCostForStraightTimePreOrPostOutage()
         {
             var dateTimeForCost = DateTime.Parse("1/15/2018");
             var headCountEntries = new List<HeadCountEntry>() { new HeadCountEntry(10, dateTimeForCost) };
-            var headCountSchedules = new List<HeadCountSchedule>() { new HeadCountSchedule(headCountEntries, classification) };
-
+            var headCountSchedules = new List<HeadCountSchedule>() { new HeadCountSchedule(headCountEntries, vendorClassification) };
             var timeAndMaterialsService = new TimeAndMaterialsService(outage);
+
             var result = timeAndMaterialsService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
 
             Assert.Equal(4500, result[dateTimeForCost]);
         }
 
         [Fact]
-        public void Generate_correct_cost_for_straight_time_during_outage_weekday()
+        public void GenerateCostForStraightTimeDuringOutageWeekday()
         {
-            var dateTimeForCost = DateTime.Parse("2/15/2018");
-            var headCountEntries = new List<HeadCountEntry>() { new HeadCountEntry(10, dateTimeForCost) };
-            var headCountSchedules = new List<HeadCountSchedule>() { new HeadCountSchedule(headCountEntries, classification) };
-
+            var startDate = DateTime.Parse("2/15/2018");
+            var headCountSchedules = CreateHeadCountSchedule(10, startDate, 0, vendorClassification);
             var timeAndMaterialsService = new TimeAndMaterialsService(outage);
+
             var result = timeAndMaterialsService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
 
-            Assert.Equal(3600, result[dateTimeForCost]);
+            Assert.Equal(3600, result[startDate]);
         }
 
         [Fact]
-        public void Generate_correct_cost_for_overtime_during_outage_weekday()
+        public void GenerateCostForOvertimeDuringOutageWeekday()
         {
-            var dateTimeForCost = DateTime.Parse("2/12/2018");
-            var dateTimeForOvertime = dateTimeForCost.AddDays(5);
-            var headCountEntries = new List<HeadCountEntry>() {
-                new HeadCountEntry(10, dateTimeForCost),
-                new HeadCountEntry(10, dateTimeForCost.AddDays(1)),
-                new HeadCountEntry(10, dateTimeForCost.AddDays(2)),
-                new HeadCountEntry(10, dateTimeForCost.AddDays(3)),
-                new HeadCountEntry(10, dateTimeForCost.AddDays(4)),
-                new HeadCountEntry(10, dateTimeForOvertime),
-            };
-            var headCountSchedules = new List<HeadCountSchedule>() { new HeadCountSchedule(headCountEntries, classification) };
-
+            var startDate = DateTime.Parse("2/12/2018");
+            var daysToAdd = 5;
             var timeAndMaterialsService = new TimeAndMaterialsService(outage);
+            var headCountSchedules = CreateHeadCountSchedule(10, startDate, daysToAdd, vendorClassification);
+
             var result = timeAndMaterialsService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
 
-            Assert.Equal(7200, result[dateTimeForOvertime]);
+            Assert.Equal(7200, result[startDate.AddDays(daysToAdd)]);
         }
 
         [Fact]
-        public void Generate_correct_cost_for_partial_straighttime_and_partial_overtime()
+        public void GenerateCostForPartialStraightTimeAndPartialOvertime()
         {
-            var dateTimeForCost = DateTime.Parse("2/11/2018");
-            var dateTimeForOvertime = dateTimeForCost.AddDays(4);
-            var headCountEntries = new List<HeadCountEntry>() {
-                new HeadCountEntry(10, dateTimeForCost),
-                new HeadCountEntry(10, dateTimeForCost.AddDays(1)),
-                new HeadCountEntry(10, dateTimeForCost.AddDays(2)),
-                new HeadCountEntry(10, dateTimeForCost.AddDays(3)),
-                new HeadCountEntry(10, dateTimeForOvertime),
-            };
-            var headCountSchedules = new List<HeadCountSchedule>() { new HeadCountSchedule(headCountEntries, classification) };
-
+            var startDate = DateTime.Parse("2/11/2018");
+            var daysToAdd = 4;
             var timeAndMaterialsService = new TimeAndMaterialsService(outage);
+            var headCountSchedules = CreateHeadCountSchedule(10, startDate, daysToAdd, vendorClassification);
+
             var result = timeAndMaterialsService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
 
-            Assert.Equal(4200, result[dateTimeForOvertime]);
+            Assert.Equal(4200, result[startDate.AddDays(daysToAdd)]);
         }
 
         [Fact]
         public void UseStraightTimeRateForExemptCompanyClassifications()
         {
+            var startDate = DateTime.Parse("2/11/2018");
+            var daysToAdd = 4;
             var companyClassification = Helper.GetCompanyClassification("test", 45, true);
-            var dateTimeForCost = DateTime.Parse("2/11/2018");
-            var dateTimeForOvertime = dateTimeForCost.AddDays(4);
-            var headCountEntries = new List<HeadCountEntry>() {
-                new HeadCountEntry(10, dateTimeForCost),
-                new HeadCountEntry(10, dateTimeForCost.AddDays(1)),
-                new HeadCountEntry(10, dateTimeForCost.AddDays(2)),
-                new HeadCountEntry(10, dateTimeForCost.AddDays(3)),
-                new HeadCountEntry(10, dateTimeForOvertime),
-            };
-            var headCountSchedules = new List<HeadCountSchedule>() { new HeadCountSchedule(headCountEntries, companyClassification) };
-
             var timeAndMaterialsService = new TimeAndMaterialsService(outage);
+            var headCountSchedules = CreateHeadCountSchedule(10, startDate, daysToAdd, companyClassification);
+
             var result = timeAndMaterialsService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
 
-            Assert.Equal(4500, result[dateTimeForOvertime]);
+            Assert.Equal(4500, result[startDate.AddDays(daysToAdd)]);
+        }
+
+        [Fact]
+        public void UseHolidayRateForVendorProfilesWithHolidaysOnThatHoliday()
+        {
+            var holiday = DateTime.Parse("12/25/2018");
+            var daysToAdd = 0;
+            var vendorClassification = Helper.GetVendorClassificationWithHoliday(90, holiday);
+            var timeAndMaterialsService = new TimeAndMaterialsService(outage);
+            var headCountSchedules = CreateHeadCountSchedule(10, holiday, daysToAdd, vendorClassification);
+
+            var result = timeAndMaterialsService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
+
+            Assert.Equal(9000, result[holiday]);
+        }
+
+        private List<HeadCountSchedule> CreateHeadCountSchedule(int headCount, DateTime startDate, int durationInDays, Classification classification)
+        {
+            var headCountEntries = new List<HeadCountEntry>();
+
+            for (int i = 0; i <= durationInDays; i++)
+            {
+                headCountEntries.Add(new HeadCountEntry(headCount, startDate.AddDays(i)));
+            };
+
+            return new List<HeadCountSchedule>() { new HeadCountSchedule(headCountEntries, classification) };
         }
     }
 }
