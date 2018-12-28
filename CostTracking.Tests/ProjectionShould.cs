@@ -43,7 +43,6 @@ namespace CostTracking.Tests
         {
             var projectionLineItem1 = new ProjectionLineItem(300);
             var projectionLineItem2 = new ProjectionLineItem(600);
-            projectionLineItem2.SetAmount(400);
             defaultProjection.AddProjectionLineItem(projectionLineItem1);
             defaultProjection.AddProjectionLineItem(projectionLineItem2);
 
@@ -51,6 +50,20 @@ namespace CostTracking.Tests
 
             Assert.True(newRevision.LineItems.Sum(l => l.Amount) == defaultProjection.LineItems.Sum(l => l.Amount));
             Assert.True(newRevision.LineItems.Sum(l => l.OriginalAmount) == defaultProjection.LineItems.Sum(l => l.OriginalAmount));
+        }
+
+        [Fact]
+        public void BeLockedAfterRevisionIsCreated()
+        {
+            decimal initialAmount = 600;
+            int id = 1;
+            var projectionLineItem = Helper.CreateProjectionLineItem(initialAmount, id);
+            defaultProjection.AddProjectionLineItem(projectionLineItem);
+            var newRevision = defaultProjection.CreateRevision();
+
+            defaultProjection.UpdateLineItemAmount(id, 400);
+
+            Assert.Equal(initialAmount, projectionLineItem.Amount);
         }
     }
 }

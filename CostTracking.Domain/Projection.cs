@@ -1,5 +1,7 @@
 ﻿using CostTracking.Domain.Interface;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CostTracking.Domain
 {
@@ -10,6 +12,7 @@ namespace CostTracking.Domain
         public string GLAccountString { get; private set; }
         public CostClassification CostClassification { get; set; }
         public ICollection<ProjectionLineItem> LineItems { get; private set; }
+        private bool Locked { get; set; }
 
         public Projection(string glAccount)
         {
@@ -26,12 +29,15 @@ namespace CostTracking.Domain
 
         public Projection CreateRevision()
         {
-            Id = 0;
             RevisionNumber++;
+            Locked = true;
 
-            foreach (var item in LineItems) item.Id = 0;
+            return Clone();
+        }
 
-            return this;
+        private Projection Clone()
+        {
+            return MemberwiseClone() as Projection;
         }
 
         public bool OriginalProjection => RevisionNumber == 0;
@@ -39,6 +45,12 @@ namespace CostTracking.Domain
         public void AddProjectionLineItem(ProjectionLineItem projectionLineItem)
         {
             LineItems.Add(projectionLineItem);
+        }
+
+        public void UpdateLineItemAmount(int lineItemId, decimal newAmount)
+        {
+            if (!Locked)
+            LineItems.Single(x => x.Id == lineItemId).SetAmount(newAmount);
         }
     }
 }

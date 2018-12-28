@@ -88,5 +88,21 @@ namespace CostTracking.Tests
         {
             return new VendorProfile(DayOfWeek.Sunday, 40);
         }
+
+        public static ProjectionLineItem CreateProjectionLineItem(decimal amount, int id)
+        {
+            var projectionLineItem = new ProjectionLineItem(amount);
+            Helper.ApplyIdToPrivateField(id, projectionLineItem);
+            return projectionLineItem;
+        }
+
+        public static object ApplyIdToPrivateField(int id, object hasId)
+        {
+            var type = hasId.GetType();
+            var prop = type.GetProperty("Id", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            prop.SetValue(hasId, id);
+
+            return hasId;
+        }
     }
 }
