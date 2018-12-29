@@ -104,5 +104,18 @@ namespace CostTracking.Tests
 
             return hasId;
         }
+
+        public static List<HeadCountSchedule> CreateHeadCountSchedule(int headCount, DateTime startDate, int durationInDays, Classification classification)
+        {
+            var headCountEntries = new List<HeadCountEntry>();
+
+            for (int i = 0; i <= durationInDays; i++)
+            {
+                headCountEntries.Add(new HeadCountEntry(headCount, startDate.AddDays(i)));
+            };
+
+            return new List<HeadCountSchedule>() { new HeadCountSchedule(headCountEntries, classification) };
+        }
+
     }
 }

@@ -37,7 +37,7 @@ namespace CostTracking.Tests
         public void GenerateCostForStraightTimeDuringOutageWeekday()
         {
             var startDate = DateTime.Parse("2/15/2018");
-            var headCountSchedules = CreateHeadCountSchedule(10, startDate, 0, vendorClassification);
+            var headCountSchedules = Helper.CreateHeadCountSchedule(10, startDate, 0, vendorClassification);
             var timeAndMaterialsService = new TimeAndMaterialsService(outage);
 
             var result = timeAndMaterialsService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
@@ -51,7 +51,7 @@ namespace CostTracking.Tests
             var startDate = DateTime.Parse("2/12/2018");
             var daysToAdd = 5;
             var timeAndMaterialsService = new TimeAndMaterialsService(outage);
-            var headCountSchedules = CreateHeadCountSchedule(10, startDate, daysToAdd, vendorClassification);
+            var headCountSchedules = Helper.CreateHeadCountSchedule(10, startDate, daysToAdd, vendorClassification);
 
             var result = timeAndMaterialsService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
 
@@ -64,7 +64,7 @@ namespace CostTracking.Tests
             var startDate = DateTime.Parse("2/11/2018");
             var daysToAdd = 4;
             var timeAndMaterialsService = new TimeAndMaterialsService(outage);
-            var headCountSchedules = CreateHeadCountSchedule(10, startDate, daysToAdd, vendorClassification);
+            var headCountSchedules = Helper.CreateHeadCountSchedule(10, startDate, daysToAdd, vendorClassification);
 
             var result = timeAndMaterialsService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
 
@@ -78,7 +78,7 @@ namespace CostTracking.Tests
             var daysToAdd = 4;
             var companyClassification = Helper.GetCompanyClassification("test", 45, true);
             var timeAndMaterialsService = new TimeAndMaterialsService(outage);
-            var headCountSchedules = CreateHeadCountSchedule(10, startDate, daysToAdd, companyClassification);
+            var headCountSchedules = Helper.CreateHeadCountSchedule(10, startDate, daysToAdd, companyClassification);
 
             var result = timeAndMaterialsService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
 
@@ -92,23 +92,11 @@ namespace CostTracking.Tests
             var daysToAdd = 0;
             var vendorClassification = Helper.GetVendorClassificationWithHoliday(90, holiday);
             var timeAndMaterialsService = new TimeAndMaterialsService(outage);
-            var headCountSchedules = CreateHeadCountSchedule(10, holiday, daysToAdd, vendorClassification);
+            var headCountSchedules = Helper.CreateHeadCountSchedule(10, holiday, daysToAdd, vendorClassification);
 
             var result = timeAndMaterialsService.GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
 
             Assert.Equal(9000, result[holiday]);
-        }
-
-        private List<HeadCountSchedule> CreateHeadCountSchedule(int headCount, DateTime startDate, int durationInDays, Classification classification)
-        {
-            var headCountEntries = new List<HeadCountEntry>();
-
-            for (int i = 0; i <= durationInDays; i++)
-            {
-                headCountEntries.Add(new HeadCountEntry(headCount, startDate.AddDays(i)));
-            };
-
-            return new List<HeadCountSchedule>() { new HeadCountSchedule(headCountEntries, classification) };
         }
     }
 }
