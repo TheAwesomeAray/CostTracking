@@ -36,5 +36,21 @@ namespace CostTracking.Tests
             Assert.Equal(9000, result[payPeriodStartDate]);
             Assert.Equal(11700, result[payPeriodStartDate.AddDays(14)]);
         }
+
+        [Fact]
+        public void ShiftPayPeriodIfValuesFallPriorToFirstPayPeriod()
+        {
+            var startDate = DateTime.Parse("2/11/2018");
+            var daysToAdd = 4;
+            var companyClassification = Helper.GetCompanyClassification("test", 45, true);
+            var headCountSchedules = Helper.CreateHeadCountSchedule(10, startDate, daysToAdd, companyClassification);
+            var projectedCosts = new TimeAndMaterialsService(outage).GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
+            var payPeriodStartDate = DateTime.Parse("2/27/2018");
+
+            var result = new PayPeriodService(payPeriodStartDate).GroupCostsByPayPeriod(projectedCosts);
+
+            Assert.Equal(9000, result[payPeriodStartDate.AddDays(-14)]);
+            Assert.Equal(11700, result[payPeriodStartDate]);
+        }
     }
 }
