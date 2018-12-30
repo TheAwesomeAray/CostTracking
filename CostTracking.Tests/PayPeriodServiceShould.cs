@@ -2,8 +2,6 @@
 using CostTracking.Domain.ContractLabor;
 using CostTracking.Domain.ContractLabor.Services;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace CostTracking.Tests
@@ -28,7 +26,7 @@ namespace CostTracking.Tests
             var daysToAdd = 4;
             var companyClassification = Helper.GetCompanyClassification("test", 45, true);
             var headCountSchedules = Helper.CreateHeadCountSchedule(10, startDate, daysToAdd, companyClassification);
-            var projectedCosts = new TimeAndMaterialsService(outage).GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
+            var projectedCosts = new ProjectedLaborCostService(outage).GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
             var payPeriodStartDate = DateTime.Parse("2/13/2018");
 
             var result = new PayPeriodService(payPeriodStartDate).GroupCostsByPayPeriod(projectedCosts);
@@ -44,7 +42,7 @@ namespace CostTracking.Tests
             var daysToAdd = 4;
             var companyClassification = Helper.GetCompanyClassification("test", 45, true);
             var headCountSchedules = Helper.CreateHeadCountSchedule(10, startDate, daysToAdd, companyClassification);
-            var projectedCosts = new TimeAndMaterialsService(outage).GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
+            var projectedCosts = new ProjectedLaborCostService(outage).GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules);
             var payPeriodStartDate = DateTime.Parse("2/27/2018");
 
             var result = new PayPeriodService(payPeriodStartDate).GroupCostsByPayPeriod(projectedCosts);

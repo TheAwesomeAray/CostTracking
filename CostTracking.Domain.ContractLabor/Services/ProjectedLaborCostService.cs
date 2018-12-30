@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace CostTracking.Domain.ContractLabor.Services
 {
-    public class TimeAndMaterialsService
+    public class ProjectedLaborCostService
     {
         private Outage outage;
 
-        public TimeAndMaterialsService(Outage outage)
+        public ProjectedLaborCostService(Outage outage)
         {
             this.outage = outage;
         }
@@ -37,7 +37,7 @@ namespace CostTracking.Domain.ContractLabor.Services
 
             return dailyLaborCosts;
         }
-
+        
         private decimal GetLaborCost(int headCount, decimal rate, decimal hours)
         {
             return headCount * hours * rate;
