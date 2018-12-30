@@ -1,6 +1,6 @@
 ﻿using CostTracking.Domain.Interface;
 
-namespace CostTracking.Domain
+namespace CostTracking.Domain.Services
 {
     public static class GLAccountService
     {

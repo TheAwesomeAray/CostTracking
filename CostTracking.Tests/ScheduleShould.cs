@@ -1,8 +1,6 @@
 ﻿using CostTracking.Domain;
-using CostTracking.Domain.ContractLabor;
-using CostTracking.Domain.ContractLabor.Services;
+using CostTracking.Domain.Commands;
 using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace CostTracking.Tests
@@ -13,7 +11,12 @@ namespace CostTracking.Tests
 
         public ScheduleShould()
         {
-            outage = new Outage(DateTime.Parse("1/1/2018"), DateTime.Parse("1/30/2018"));
+            var command = new OutageCreateCommand()
+            {
+                OutageStartDate = DateTime.Parse("1/1/2018"),
+                OutageEndDate = DateTime.Parse("1/30/2018")
+            };
+            outage = new Outage(command);
         }
 
         [Fact]

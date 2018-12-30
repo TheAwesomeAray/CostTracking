@@ -1,4 +1,7 @@
 ﻿using CostTracking.Domain;
+using CostTracking.Domain.Commands;
+using CostTracking.Domain.ContractLabor;
+using CostTracking.Domain.ContractLabor.Services;
 using CostTracking.Domain.Services;
 using System;
 using System.Collections.Generic;
@@ -10,10 +13,20 @@ namespace CostTracking.Tests
     public class CostAggregatorShould
     {
         private Outage outage;
+        private CompanyClassification companyClassification;
+        private HoursSchedule hoursSchedule;
 
         public CostAggregatorShould()
         {
-            outage = new Outage(DateTime.Parse("1/1/2018"), DateTime.Parse("1/30/2018"));
+            var command = new OutageCreateCommand()
+            {
+                OutageStartDate = DateTime.Parse("1/1/2018"),
+                OutageEndDate = DateTime.Parse("1/30/2018"),
+                PayPeriodStartDate = DateTime.Parse("2/12/2018")
+            };
+            outage = new Outage(command);
+            companyClassification = Helper.GetCompanyClassification("Boilermaker", 45, false);
+            hoursSchedule = Helper.GetHoursSchedule(8, 12, 10);
         }
 
         [Fact]
@@ -42,6 +55,40 @@ namespace CostTracking.Tests
             }
 
             return costsForDates;
+        }
+
+        [Fact]
+        public void GroupCostsByPayPeriod()
+        {
+            var companyClassification = Helper.GetCompanyClassification("test", 45, true);
+            var headCountSchedules = Helper.CreateHeadCountSchedule(10, DateTime.Parse("2/11/2018"), 4, companyClassification);
+            var projectedCosts = new ProjectedLaborCostService(outage).GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules)
+                                                                      .Select(x => new CostForDate(x.Value, x.Key));
+
+            var result = AggregationFactory.GetAggregator(outage, AggregationMode.PayPeriod).Aggregate(projectedCosts);
+
+            Assert.Equal(9000, result[outage.PayPeriodStartDate]);
+            Assert.Equal(15750, result[outage.PayPeriodStartDate.AddDays(14)]);
+        }
+
+        [Fact]
+        public void ShiftPayPeriodIfValuesFallPriorToFirstPayPeriod()
+        {
+            var companyClassification = Helper.GetCompanyClassification("test", 45, true);
+            var headCountSchedules = Helper.CreateHeadCountSchedule(10, DateTime.Parse("2/11/2018"), 4, companyClassification);
+            var projectedCosts = new ProjectedLaborCostService(outage).GetProjectedCostsForDateRange(hoursSchedule, headCountSchedules)
+                                                                      .Select(x => new CostForDate(x.Value, x.Key));
+            var localOutage = new Outage(new OutageCreateCommand()
+            {
+                OutageStartDate = DateTime.Parse("1/1/2018"),
+                OutageEndDate = DateTime.Parse("1/30/2018"),
+                PayPeriodStartDate = DateTime.Parse("2/26/2018")
+            });
+
+            var result = AggregationFactory.GetAggregator(localOutage, AggregationMode.PayPeriod).Aggregate(projectedCosts);
+
+            Assert.Equal(9000, result[localOutage.PayPeriodStartDate.AddDays(-14)]);
+            Assert.Equal(15750, result[localOutage.PayPeriodStartDate]);
         }
     }
 }

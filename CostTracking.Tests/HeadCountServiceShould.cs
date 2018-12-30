@@ -1,4 +1,5 @@
 ﻿using CostTracking.Domain;
+using CostTracking.Domain.Commands;
 using CostTracking.Domain.ContractLabor;
 using CostTracking.Domain.ContractLabor.Services;
 using System;
@@ -15,7 +16,12 @@ namespace CostTracking.Tests
         public HeadCountServiceShould()
         {
             hoursSchedule = Helper.GetHoursSchedule(8, 12, 10);
-            outage = new Outage(DateTime.Parse("1/1/2018"), DateTime.Parse("1/30/2018"));
+            var command = new OutageCreateCommand()
+            {
+                OutageStartDate = DateTime.Parse("1/1/2018"),
+                OutageEndDate = DateTime.Parse("1/30/2018")
+            };
+            outage = new Outage(command);
         }
 
         [Fact]

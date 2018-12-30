@@ -1,4 +1,5 @@
 ﻿using CostTracking.Domain;
+using CostTracking.Domain.Services;
 using Xunit;
 
 namespace CostTracking.Tests
