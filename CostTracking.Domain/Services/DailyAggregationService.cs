@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CostTracking.Domain.Services
 {
-    public class DailyAggregationService : Aggregator
+    public class DailyAggregationService : DateAggregator
     {
         public Dictionary<DateTime, decimal> Aggregate(IEnumerable<CostForDate> costsForDates)
         {

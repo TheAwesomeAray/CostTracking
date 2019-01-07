@@ -6,7 +6,7 @@ namespace CostTracking.Domain.Services
 {
     public class AggregationFactory
     {
-        public static Aggregator GetAggregator(Outage outage, AggregationMode mode)
+        public static DateAggregator GetAggregator(Outage outage, AggregationMode mode)
         {
             switch (mode)
             {

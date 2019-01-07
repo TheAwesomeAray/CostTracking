@@ -8,11 +8,17 @@ namespace CostTracking.Domain.ContractLabor
         public DateTime DateWorked { get; private set; }
         public decimal STHoursWorked { get; private set; }
         public decimal OTHoursWorked { get; private set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
+        public string FullName => $"{LastName}, {FirstName}";
+        public decimal HoursWorked => STHoursWorked + OTHoursWorked;
 
-        public VendorTimeEntry(DateTime dateWorked, decimal stHoursWorked, VendorClassification classification)
+        public VendorTimeEntry(DateTime dateWorked, string firstName, string lastName, decimal stHoursWorked, VendorClassification classification)
         {
             DateWorked = dateWorked;
             STHoursWorked = stHoursWorked;
+            FirstName = firstName;
+            LastName = lastName;
         }
     }
 }

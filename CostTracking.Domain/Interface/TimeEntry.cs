@@ -2,7 +2,7 @@
 {
     public interface TimeEntry
     {
-        decimal STHoursWorked { get; }
-        decimal OTHoursWorked { get; }
+        decimal HoursWorked { get; }
+        string FullName { get; }
     }
 }

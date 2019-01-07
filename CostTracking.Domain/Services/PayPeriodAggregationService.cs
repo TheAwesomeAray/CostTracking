@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CostTracking.Domain.Services
 {
-    public class PayPeriodAggregationService : Aggregator
+    public class PayPeriodAggregationService : DateAggregator
     {
         private DateTime PayPeriodStartDate { get; set; }
         private static readonly int PayPeriodLength = 14;

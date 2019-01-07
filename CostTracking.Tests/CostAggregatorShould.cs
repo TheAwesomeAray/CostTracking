@@ -80,10 +80,19 @@ namespace CostTracking.Tests
         [Fact]
         public void AggregateCostsByPerson()
         {
-            var timeEntries = new List<VendorTimeEntry>();
-            var costGrouping = AggregationFactory.GetIndividualAggregator(outage, null).Aggregate(new List<VendorTimeEntry>());
+            var classification = Helper.GetVendorClassification("test", 0, 0);
+            var timeEntries = new List<VendorTimeEntry>()
+            {
+                new VendorTimeEntry(DateTime.Parse("1/2/2018"), "Andrew", "Ray", 10, classification),
+                new VendorTimeEntry(DateTime.Parse("1/2/2018"), "Andrew", "Ray", 5, classification),
+                new VendorTimeEntry(DateTime.Parse("1/2/2018"), "Candice", "Ray", 10, classification),
+                new VendorTimeEntry(DateTime.Parse("1/2/2018"), "Candice", "Ray", 15, classification),
+            };
+
+            var costGrouping = AggregationFactory.GetIndividualAggregator(outage, null).Aggregate(timeEntries);
             
-            Assert.Equal(15, costGrouping["Ray, Andrew"].Cost);
+            Assert.Equal(15, costGrouping["Ray, Andrew"]);
+            Assert.Equal(25, costGrouping["Ray, Candice"]);
         }
 
         private List<CostForDate> GenerateCostsForDates(List<DateTime> dates)
