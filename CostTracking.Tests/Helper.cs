@@ -8,9 +8,9 @@ namespace CostTracking.Tests
 {
     public  static class Helper
     {
-        public static List<TimeEntry> GetTimeEntriesForDateRange(HoursSchedule schedule, int desiredHeadCount, List<DateTime> dateRange, Outage outage, VendorClassification classification)
+        public static List<VendorTimeEntry> GetTimeEntriesForDateRange(HoursSchedule schedule, int desiredHeadCount, List<DateTime> dateRange, Outage outage, VendorClassification classification)
         {
-            var timeEntries = new List<TimeEntry>();
+            var timeEntries = new List<VendorTimeEntry>();
 
             foreach (var date in dateRange)
             {
@@ -20,9 +20,9 @@ namespace CostTracking.Tests
             return timeEntries;
         }
 
-        public static List<TimeEntry> GetTimeEntriesForDateRange(HoursSchedule schedule, int desiredHeadCount, DateTime startDate, DateTime endDate, Outage outage, VendorClassification classification)
+        public static List<VendorTimeEntry> GetTimeEntriesForDateRange(HoursSchedule schedule, int desiredHeadCount, DateTime startDate, DateTime endDate, Outage outage, VendorClassification classification)
         {
-            var timeEntries = new List<TimeEntry>();
+            var timeEntries = new List<VendorTimeEntry>();
 
             for (var date = startDate; date.DayOfYear != endDate.DayOfYear + 1; startDate.AddDays(1))
             {
@@ -32,13 +32,13 @@ namespace CostTracking.Tests
             return timeEntries;
         }
 
-        private static List<TimeEntry> GenerateTimeEntriesForDay(DateTime date, int desiredHeadCount, HoursSchedule schedule, Outage outage, VendorClassification classification)
+        private static List<VendorTimeEntry> GenerateTimeEntriesForDay(DateTime date, int desiredHeadCount, HoursSchedule schedule, Outage outage, VendorClassification classification)
         {
-            var timeEntriesForDay = new List<TimeEntry>();
+            var timeEntriesForDay = new List<VendorTimeEntry>();
 
             for (int i = 0; i < desiredHeadCount; i++)
             {
-                timeEntriesForDay.Add(new TimeEntry(date, schedule.GetScheduledHoursForDate(outage, date), classification));
+                timeEntriesForDay.Add(new VendorTimeEntry(date, schedule.GetScheduledHoursForDate(outage, date), classification));
             }
 
             return timeEntriesForDay;

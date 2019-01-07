@@ -8,7 +8,7 @@ namespace CostTracking.Domain.Services
     public class PayPeriodAggregationService : Aggregator
     {
         private DateTime PayPeriodStartDate { get; set; }
-        private static int PayPeriodLength = 14;
+        private static readonly int PayPeriodLength = 14;
 
         public PayPeriodAggregationService(DateTime payPeriodStartDate)
         {

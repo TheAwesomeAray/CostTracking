@@ -1,5 +1,6 @@
 ﻿using CostTracking.Domain.Interface;
 using System;
+using System.Collections.Generic;
 
 namespace CostTracking.Domain.Services
 {
@@ -16,6 +17,11 @@ namespace CostTracking.Domain.Services
                 default:
                     throw new InvalidOperationException("Invalid Aggregation Mode.");
             }
+        }
+
+        public static TimeEntryAggregator GetIndividualAggregator(Outage outage, List<TimeEntry> list)
+        {
+            return new TimeEntryAggregator();
         }
     }
 

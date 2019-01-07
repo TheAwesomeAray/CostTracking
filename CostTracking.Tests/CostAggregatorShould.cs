@@ -43,20 +43,6 @@ namespace CostTracking.Tests
             }
         }
 
-        private List<CostForDate> GenerateCostsForDates(List<DateTime> dates)
-        {
-            int min = -500;
-            int max = 500;
-            var costsForDates = new List<CostForDate>();
-
-            foreach (var date in dates)
-            {
-                costsForDates.Add(new CostForDate(new Random().Next(min, max), date));
-            }
-
-            return costsForDates;
-        }
-
         [Fact]
         public void GroupCostsByPayPeriod()
         {
@@ -89,6 +75,29 @@ namespace CostTracking.Tests
 
             Assert.Equal(9000, result[localOutage.PayPeriodStartDate.AddDays(-14)]);
             Assert.Equal(15750, result[localOutage.PayPeriodStartDate]);
+        }
+
+        [Fact]
+        public void AggregateCostsByPerson()
+        {
+            var timeEntries = new List<VendorTimeEntry>();
+            var costGrouping = AggregationFactory.GetIndividualAggregator(outage, null).Aggregate(new List<VendorTimeEntry>());
+            
+            Assert.Equal(15, costGrouping["Ray, Andrew"].Cost);
+        }
+
+        private List<CostForDate> GenerateCostsForDates(List<DateTime> dates)
+        {
+            int min = -500;
+            int max = 500;
+            var costsForDates = new List<CostForDate>();
+
+            foreach (var date in dates)
+            {
+                costsForDates.Add(new CostForDate(new Random().Next(min, max), date));
+            }
+
+            return costsForDates;
         }
     }
 }
